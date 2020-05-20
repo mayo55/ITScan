@@ -25,6 +25,7 @@ namespace ITScan
             twain.ScanningComplete += twain_ScanningComplete;
 
             settings = new ScanSettings();
+            settings.UseAutoFeeder = true;
             settings.ShowTwainUI = true;
 
             txtSaveFolder.Text = Properties.Settings.Default.SaveFolder;
@@ -137,6 +138,7 @@ namespace ITScan
             string strCounterPadding = strCounter.Substring(strCounter.Length - digits, digits);
             txtOutputFilename.Text = Path.Combine(txtSaveFolder.Text, strCounterPadding + "." + cmbFormat.Text.ToLower());
         }
+
         private void twain_TransferImage(object sender, TransferImageEventArgs e)
         {
             Bitmap resultImage = e.Image;
