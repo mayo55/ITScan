@@ -25,7 +25,6 @@ namespace ITScan
             twain.ScanningComplete += twain_ScanningComplete;
 
             settings = new ScanSettings();
-            settings.UseAutoFeeder = true;
             settings.ShowTwainUI = true;
 
             txtSaveFolder.Text = Properties.Settings.Default.SaveFolder;

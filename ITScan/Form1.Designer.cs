@@ -62,7 +62,7 @@
             // 
             this.txtSaveFolder.Location = new System.Drawing.Point(94, 13);
             this.txtSaveFolder.Name = "txtSaveFolder";
-            this.txtSaveFolder.Size = new System.Drawing.Size(154, 19);
+            this.txtSaveFolder.Size = new System.Drawing.Size(147, 19);
             this.txtSaveFolder.TabIndex = 1;
             this.txtSaveFolder.TextChanged += new System.EventHandler(this.txtSaveFolder_TextChanged);
             // 
@@ -81,7 +81,7 @@
             this.btnScan.Name = "btnScan";
             this.btnScan.Size = new System.Drawing.Size(91, 23);
             this.btnScan.TabIndex = 11;
-            this.btnScan.Text = "スキャン";
+            this.btnScan.Text = "スキャン(&T)...";
             this.btnScan.UseVisualStyleBackColor = true;
             this.btnScan.Click += new System.EventHandler(this.btnScan_Click);
             // 
@@ -91,7 +91,7 @@
             this.btnSelectSource.Name = "btnSelectSource";
             this.btnSelectSource.Size = new System.Drawing.Size(91, 23);
             this.btnSelectSource.TabIndex = 12;
-            this.btnSelectSource.Text = "ソース選択";
+            this.btnSelectSource.Text = "ソース選択(&S)...";
             this.btnSelectSource.UseVisualStyleBackColor = true;
             this.btnSelectSource.Click += new System.EventHandler(this.btnSelectSource_Click);
             // 
@@ -145,11 +145,11 @@
             // 
             // btnReference
             // 
-            this.btnReference.Location = new System.Drawing.Point(254, 11);
+            this.btnReference.Location = new System.Drawing.Point(247, 11);
             this.btnReference.Name = "btnReference";
-            this.btnReference.Size = new System.Drawing.Size(58, 23);
+            this.btnReference.Size = new System.Drawing.Size(65, 23);
             this.btnReference.TabIndex = 2;
-            this.btnReference.Text = "参照";
+            this.btnReference.Text = "参照(&R)...";
             this.btnReference.UseVisualStyleBackColor = true;
             this.btnReference.Click += new System.EventHandler(this.btnReference_Click);
             // 

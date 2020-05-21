@@ -6,7 +6,7 @@
       <Value Profile="(Default)">C:\Scan</Value>
     </Setting>
     <Setting Name="Counter" Type="System.Decimal" Scope="User">
-      <Value Profile="(Default)">0</Value>
+      <Value Profile="(Default)">1</Value>
     </Setting>
     <Setting Name="Digits" Type="System.Decimal" Scope="User">
       <Value Profile="(Default)">6</Value>
