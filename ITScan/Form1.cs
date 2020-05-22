@@ -95,9 +95,6 @@ namespace ITScan
             }
             catch (Exception ex)
             {
-            }
-            finally
-            {
                 Enabled = true;
             }
         }
@@ -142,17 +139,18 @@ namespace ITScan
         {
             Bitmap resultImage = e.Image;
             string strSelectedItem = cmbFormat.SelectedItem.ToString();
+            string outputFilename = txtOutputFilename.Text;
+            nudCounter.Value++;
 
             if (strSelectedItem == "BMP")
             {
-                resultImage.Save(txtOutputFilename.Text, ImageFormat.Bmp);
+                resultImage.Save(outputFilename, ImageFormat.Bmp);
             }
             else if (strSelectedItem == "PNG")
             {
-                resultImage.Save(txtOutputFilename.Text, ImageFormat.Png);
+                resultImage.Save(outputFilename, ImageFormat.Png);
             }
-
-            nudCounter.Value++;
+            resultImage.Dispose();
 
             SetOutputFilename();
             Properties.Settings.Default.Save();
