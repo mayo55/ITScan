@@ -10,7 +10,7 @@ namespace ITScan
 {
     public partial class Form1 : Form
     {
-        private Twain twain = null;
+        private MyTwain twain = null;
         private ScanSettings settings = null;
 
         public Form1()
@@ -20,7 +20,7 @@ namespace ITScan
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            twain = new Twain(new WinFormsWindowMessageHook(this));
+            twain = new MyTwain(new WinFormsWindowMessageHook(this));
             twain.TransferImage += twain_TransferImage;
             twain.ScanningComplete += twain_ScanningComplete;
 

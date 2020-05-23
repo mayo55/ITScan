@@ -58,12 +58,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BitmapFileHeader.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="MyBitmapRenderer.cs" />
+    <Compile Include="MyDataSource.cs" />
+    <Compile Include="MyDataSourceManager.cs" />
+    <Compile Include="MyKernel32Native.cs" />
+    <Compile Include="MyTwain.cs" />
+    <Compile Include="MyTwainConstants.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
