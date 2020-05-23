@@ -144,7 +144,7 @@ namespace ITScan
                     {
                         exception = e;
                     }
-                    CloseDsAndCompleteScanning(exception);
+                    //CloseDsAndCompleteScanning(exception);
                     break;
 
                 case Message.CloseDS:
