@@ -143,7 +143,10 @@ namespace ITScan
                     catch (Exception e)
                     {
                         exception = e;
+                        // 例外発生時のみCloseとScanningCompleteを行うように移動。
+                        CloseDsAndCompleteScanning(exception);
                     }
+                    // 転送終了時にCloseしないようにコメントアウト。
                     //CloseDsAndCompleteScanning(exception);
                     break;
 
@@ -205,6 +208,12 @@ namespace ITScan
                         Message.Get,
                         ref hbitmap);
 
+                    // キャンセルされた場合にはCloseせずに抜ける。
+                    // その後CloseDSReqメッセージが届くので、そこでCloseとScanningCompleteを行う。
+                    if (result == TwainResult.Cancel)
+                    {
+                        break;
+                    }
                     if (result != TwainResult.XferDone)
                     {
                         DataSource.Close();
