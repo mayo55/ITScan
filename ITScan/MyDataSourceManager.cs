@@ -27,7 +27,9 @@ namespace ITScan
             ApplicationId = applicationId.Clone();
 
             ScanningComplete += delegate { };
-            TransferImage += delegate { };
+            // MyTransferImageに変更
+            //TransferImage += delegate { };
+            MyTransferImage += delegate { };
 
             _messageHook = messageHook;
             _messageHook.FilterMessageCallback = FilterMessage;
@@ -67,7 +69,9 @@ namespace ITScan
         /// </summary>
         public event EventHandler<ScanningCompleteEventArgs> ScanningComplete;
 
-        public event EventHandler<TransferImageEventArgs> TransferImage;
+        // MyTransferImageに変更
+        //public event EventHandler<TransferImageEventArgs> TransferImage;
+        public event EventHandler<MyTransferImageEventArgs> MyTransferImage;
 
         public IWindowsMessageHook MessageHook { get { return _messageHook; } }
 
@@ -241,13 +245,16 @@ namespace ITScan
                     }
                     else
                     {
-                        using (var renderer = new MyBitmapRenderer(hbitmap))
-                        {
-                            TransferImageEventArgs args = new TransferImageEventArgs(renderer.RenderToBitmap(), pendingTransfer.Count != 0);
-                            TransferImage(this, args);
-                            if (!args.ContinueScanning)
+                        // 呼び出し元でnew MyBitmapRenderer()とrenderer.RenderToBitmap()相当の処理を行い、Bitmapの中身のコピーを不要にしてメモリ節約している。
+                        //using (var renderer = new MyBitmapRenderer(hbitmap))
+                        //{
+                        //    TransferImageEventArgs args = new TransferImageEventArgs(renderer.RenderToBitmap(), pendingTransfer.Count != 0);
+                        //    TransferImage(this, args);
+                        MyTransferImageEventArgs args = new MyTransferImageEventArgs(hbitmap, pendingTransfer.Count != 0);
+                        MyTransferImage(this, args);
+                        if (!args.ContinueScanning)
                                 break;
-                        }
+                        //}
                     }
                 }
                 while (pendingTransfer.Count != 0);

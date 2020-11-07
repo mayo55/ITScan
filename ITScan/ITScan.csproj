@@ -69,6 +69,7 @@
     <Compile Include="MyDataSource.cs" />
     <Compile Include="MyDataSourceManager.cs" />
     <Compile Include="MyKernel32Native.cs" />
+    <Compile Include="MyTransferImageEventArgs.cs" />
     <Compile Include="MyTwain.cs" />
     <Compile Include="MyTwainConstants.cs" />
     <Compile Include="Program.cs" />

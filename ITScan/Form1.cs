@@ -2,8 +2,10 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using TwainDotNet;
+using TwainDotNet.Win32;
 using TwainDotNet.WinFroms;
 
 namespace ITScan
@@ -13,6 +15,12 @@ namespace ITScan
         private MyTwain twain = null;
         private ScanSettings settings = null;
 
+        IntPtr _dibHandle;
+        IntPtr _bitmapPointer;
+        IntPtr _pixelInfoPointer;
+        Rectangle _rectangle;
+        BitmapInfoHeader _bitmapInfo;
+
         public Form1()
         {
             InitializeComponent();
@@ -21,7 +29,7 @@ namespace ITScan
         private void Form1_Load(object sender, EventArgs e)
         {
             twain = new MyTwain(new WinFormsWindowMessageHook(this));
-            twain.TransferImage += twain_TransferImage;
+            twain.MyTransferImage += twain_MyTransferImage;
             twain.ScanningComplete += twain_ScanningComplete;
 
             settings = new ScanSettings();
@@ -135,25 +143,79 @@ namespace ITScan
             txtOutputFilename.Text = Path.Combine(txtSaveFolder.Text, strCounterPadding + "." + cmbFormat.Text.ToLower());
         }
 
-        private void twain_TransferImage(object sender, TransferImageEventArgs e)
+        private void twain_MyTransferImage(object sender, MyTransferImageEventArgs e)
         {
-            Bitmap resultImage = e.Image;
-            string strSelectedItem = cmbFormat.SelectedItem.ToString();
-            string outputFilename = txtOutputFilename.Text;
-            nudCounter.Value++;
-
-            if (strSelectedItem == "BMP")
+            _dibHandle = e.HBitmap;
+            _bitmapPointer = MyKernel32Native.GlobalLock(_dibHandle);
+            try
             {
-                resultImage.Save(outputFilename, ImageFormat.Bmp);
-            }
-            else if (strSelectedItem == "PNG")
-            {
-                resultImage.Save(outputFilename, ImageFormat.Png);
-            }
-            resultImage.Dispose();
+                _bitmapInfo = new BitmapInfoHeader();
+                Marshal.PtrToStructure(_bitmapPointer, _bitmapInfo);
+                //log.Debug(_bitmapInfo.ToString());
 
-            SetOutputFilename();
-            Properties.Settings.Default.Save();
+                _rectangle = new Rectangle();
+                _rectangle.X = _rectangle.Y = 0;
+                _rectangle.Width = _bitmapInfo.Width;
+                _rectangle.Height = _bitmapInfo.Height;
+
+                if (_bitmapInfo.SizeImage == 0)
+                {
+                    _bitmapInfo.SizeImage = ((((_bitmapInfo.Width * _bitmapInfo.BitCount) + 31) & ~31) >> 3) * _bitmapInfo.Height;
+                }
+
+                // The following code only works on x86
+                System.Diagnostics.Debug.Assert(Marshal.SizeOf(typeof(IntPtr)) == 4);
+
+                int pixelInfoPointer = _bitmapInfo.ClrUsed;
+                if ((pixelInfoPointer == 0) && (_bitmapInfo.BitCount <= 8))
+                {
+                    pixelInfoPointer = 1 << _bitmapInfo.BitCount;
+                }
+
+                pixelInfoPointer = (pixelInfoPointer * 4) + _bitmapInfo.Size + _bitmapPointer.ToInt32();
+
+                _pixelInfoPointer = new IntPtr(pixelInfoPointer);
+                int sizeBitmapFileHeader = Marshal.SizeOf(typeof(BitmapFileHeader));
+
+                BitmapFileHeader bitmapFile = new BitmapFileHeader();
+                bitmapFile.Type = 'M' * 256 + 'B';
+                bitmapFile.Size = (_pixelInfoPointer.ToInt32() - _bitmapPointer.ToInt32()) + sizeBitmapFileHeader + _bitmapInfo.SizeImage;
+                bitmapFile.Reserved1 = 0;
+                bitmapFile.Reserved2 = 0;
+                bitmapFile.OffBits = (_pixelInfoPointer.ToInt32() - _bitmapPointer.ToInt32()) + sizeBitmapFileHeader;
+
+                IntPtr _bitmapFilePointer = Marshal.AllocHGlobal(sizeBitmapFileHeader);
+                Marshal.StructureToPtr(bitmapFile, _bitmapFilePointer, true);
+
+                byte[] buffer = new byte[bitmapFile.Size];
+                Marshal.Copy(_bitmapFilePointer, buffer, 0, sizeBitmapFileHeader);
+                Marshal.Copy(_bitmapPointer, buffer, sizeBitmapFileHeader, bitmapFile.Size - sizeBitmapFileHeader);
+
+                using (MemoryStream ms = new MemoryStream(buffer))
+                using (Bitmap bitmap = new Bitmap(ms))
+                {
+                    string strSelectedItem = cmbFormat.SelectedItem.ToString();
+                    string outputFilename = txtOutputFilename.Text;
+                    nudCounter.Value++;
+
+                    if (strSelectedItem == "BMP")
+                    {
+                        bitmap.Save(outputFilename, ImageFormat.Bmp);
+                    }
+                    else if (strSelectedItem == "PNG")
+                    {
+                        bitmap.Save(outputFilename, ImageFormat.Png);
+                    }
+
+                    SetOutputFilename();
+                    Properties.Settings.Default.Save();
+                }
+            }
+            finally
+            {
+                MyKernel32Native.GlobalUnlock(_dibHandle);
+                MyKernel32Native.GlobalFree(_dibHandle);
+            }
         }
 
         private void twain_ScanningComplete(object sender, ScanningCompleteEventArgs e)

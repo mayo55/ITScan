@@ -11,16 +11,21 @@ namespace ITScan
         public MyTwain(IWindowsMessageHook messageHook)
         {
             ScanningComplete += delegate { };
-            TransferImage += delegate { };
+            // MyTransferImageに変更
+            //TransferImage += delegate { };
+            MyTransferImage += delegate { };
 
             _dataSourceManager = new MyDataSourceManager(DataSourceManager.DefaultApplicationId, messageHook);
             _dataSourceManager.ScanningComplete += delegate(object sender, ScanningCompleteEventArgs args)
             {
                 ScanningComplete(this, args);
             };
-            _dataSourceManager.TransferImage += delegate(object sender, TransferImageEventArgs args)
+            // MyTransferImageに変更
+            //_dataSourceManager.TransferImage += delegate(object sender, TransferImageEventArgs args)
+            _dataSourceManager.MyTransferImage += delegate (object sender, MyTransferImageEventArgs args)
             {
-                TransferImage(this, args);
+                //TransferImage(this, args);
+                MyTransferImage(this, args);
             };
         }
 
@@ -29,7 +34,9 @@ namespace ITScan
         /// </summary>
         public event EventHandler<ScanningCompleteEventArgs> ScanningComplete;
 
-        public event EventHandler<TransferImageEventArgs> TransferImage;
+        // MyTransferImageに変更
+        //public event EventHandler<TransferImageEventArgs> TransferImage;
+        public event EventHandler<MyTransferImageEventArgs> MyTransferImage;
 
         /// <summary>
         /// Starts scanning.
