@@ -41,6 +41,7 @@
             this.btnReference = new System.Windows.Forms.Button();
             this.lblDigits = new System.Windows.Forms.Label();
             this.nudDigits = new System.Windows.Forms.NumericUpDown();
+            this.btnConfig = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.nudCounter)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudDigits)).BeginInit();
             this.SuspendLayout();
@@ -185,12 +186,23 @@
             0});
             this.nudDigits.ValueChanged += new System.EventHandler(this.nudDigits_ValueChanged);
             // 
+            // btnConfig
+            // 
+            this.btnConfig.Location = new System.Drawing.Point(221, 119);
+            this.btnConfig.Name = "btnConfig";
+            this.btnConfig.Size = new System.Drawing.Size(91, 23);
+            this.btnConfig.TabIndex = 13;
+            this.btnConfig.Text = "設定(&O)...";
+            this.btnConfig.UseVisualStyleBackColor = true;
+            this.btnConfig.Click += new System.EventHandler(this.btnConfig_Click);
+            // 
             // Form1
             // 
             this.AcceptButton = this.btnScan;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(326, 151);
+            this.Controls.Add(this.btnConfig);
             this.Controls.Add(this.nudDigits);
             this.Controls.Add(this.lblDigits);
             this.Controls.Add(this.btnReference);
@@ -232,6 +244,7 @@
         private System.Windows.Forms.Button btnReference;
         private System.Windows.Forms.Label lblDigits;
         private System.Windows.Forms.NumericUpDown nudDigits;
+        private System.Windows.Forms.Button btnConfig;
     }
 }
 

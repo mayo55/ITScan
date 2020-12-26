@@ -194,6 +194,22 @@ namespace ITScan
                 using (MemoryStream ms = new MemoryStream(buffer))
                 using (Bitmap bitmap = new Bitmap(ms))
                 {
+                    switch (Config.Rotate)
+                    {
+                        case 90:
+                            bitmap.RotateFlip(RotateFlipType.Rotate90FlipNone);
+                            break;
+
+                        case 180:
+                            bitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
+                            break;
+
+                        case 270:
+                            bitmap.RotateFlip(RotateFlipType.Rotate270FlipNone);
+                            break;
+
+                    }
+
                     string strSelectedItem = cmbFormat.SelectedItem.ToString();
                     string outputFilename = txtOutputFilename.Text;
                     nudCounter.Value++;
@@ -221,6 +237,12 @@ namespace ITScan
         private void twain_ScanningComplete(object sender, ScanningCompleteEventArgs e)
         {
             Enabled = true;
+        }
+
+        private void btnConfig_Click(object sender, EventArgs e)
+        {
+            ConfigForm configForm = new ConfigForm();
+            configForm.ShowDialog();
         }
     }
 }
