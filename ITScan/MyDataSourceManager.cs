@@ -212,9 +212,10 @@ namespace ITScan
                         Message.Get,
                         ref hbitmap);
 
-                    // キャンセルされた場合にはCloseせずに抜ける。
+                    // キャンセルされた場合または失敗の場合にはCloseせずに抜ける。
                     // その後CloseDSReqメッセージが届くので、そこでCloseとScanningCompleteを行う。
-                    if (result == TwainResult.Cancel)
+                    if (result == TwainResult.Cancel ||
+                        result == TwainResult.Failure)
                     {
                         break;
                     }
